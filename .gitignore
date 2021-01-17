@@ -3,3 +3,4 @@ driver
 *.swp
 .env
 !.gitkeep
+*.log
