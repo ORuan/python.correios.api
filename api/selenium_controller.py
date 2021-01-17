@@ -10,8 +10,8 @@ import os
 import json
 import sys
 import chromedriver_autoinstaller
-from seleniumwire import webdriver
-
+from selenium import webdriver
+import pdb
 # OA016913717BR
 #user_agent = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.101 Safari/537.36'}
 
@@ -24,7 +24,7 @@ class SearchCorreios():
         # Check if the current version of chromedriver exists
         path_install = chromedriver_autoinstaller.install()
         options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
+        #options.add_argument('--headless')
         options.add_argument('--disable-gpu')
         options.add_argument('--ignore-certificate-errors')
         options.add_argument("--test-type")
@@ -36,16 +36,8 @@ class SearchCorreios():
             executable_path=path_install
         )
 
-    def interceptor(self, request):
-        # Delete the header first
-        del request.headers['X-OPNET-AIX-PAGEID']  
-        # Delete the header first
-        del request.headers['X-OPNET-Transaction-Trace']
-
     def selenium_get_code(self):
-        content_stages = []
         driver = self.config()
-        driver.request_interceptor = self.interceptor
 
         try:
             driver.get(
@@ -54,36 +46,26 @@ class SearchCorreios():
             print('error: ', err)
             driver.close()
             return json.dumps({error: 'ERRO'})
-        text_area_correios = driver.find_element_by_xpath(
-            '/html/body/div[1]/div[3]/div[2]/div/div/div[2]/div[2]/div[4]/div/div/form/fieldset/label/textarea')
-        text_area_correios.send_keys(self.code)
-        btn_send_code = driver.find_element_by_xpath(
-            '/html/body/div[1]/div[3]/div[2]/div/div/div[2]/div[2]/div[4]/div/div/form/fieldset/div[2]/input')
-        btn_send_code.click()
-        content = driver.execute_script(
-            'function get_content(){let t={},e=(Array(),Array()),r=document.querySelectorAll(".ctrlcontent .listEvent.sro tbody");e=Array.prototype.slice.call(r);for(let r=0;r<e.length;r++)t[r]=e[r].innerText;return t};get_content()')
-        #content = driver.find_element_by_xpath('/html/body/div[1]/div[3]/div[2]/div/div/div[2]/div[2]/div[4]')
+
+        driver.execute_script("""
+            function automate(code){
+                let text_area = document.getElementById('objetos')
+                text_area.value = code;
+                let btn_send = document.getElementById('btnPesq');
+                btn_send.click()
+            }; automate('"""+self.code+"""')
+            """)
+        content = driver.execute_script("""
+            function get_content(){
+                let __json={}
+                let order = Array()
+                let response = Array()   
+                let content = document.querySelectorAll('.ctrlcontent .listEvent.sro tbody') 
+                response = Array.prototype.slice.call(content)
+                for (let i=0; i<response.length; i++){
+                    __json[i] = response[i].innerText
+                }
+                return __json;
+            }; return get_content()
+        """)
         return content
-        driver.close()
-
-
-"""function automate(code){
-    let text_area = document.getElementById('objetos')
-    text_area.value = code;
-    let btn_send = document.getElementById('btnPesq');
-    btn_send.click()
-}; automate(code)"""
-
-"""
-function get_content(){
-    let __json={}
-    let order = Array()
-    let response = Array()   
-    let content = document.querySelectorAll('.ctrlcontent .listEvent.sro tbody') 
-    response = Array.prototype.slice.call(content)
-    for (let i=0; i<response.length; i++){
-        __json[i] = response[i].innerText
-    }
-    return __json;
-}; get_content
-"""
