@@ -1,14 +1,16 @@
+#!/usr/bin/python3
 import flask, os, json
 from flask import request, jsonify
-from selenium_controller import SearchCorreios
+from controller import SearchCorreios
+
 
 
 app = flask.Flask(__name__)
 app.debug = True
-
-print('[*]:É provavel que um diretório driver seja criado, não se precoupes')
-print('[*]:Para usar a API digite: no browser')
-print('http://localhost:5000/?code={code}\n')
+print('')
+print('[*] É provavel que um diretório driver seja criado, não se precoupes')
+print('[*] Para usar a API digite no browser')
+print('--> http://localhost:5000/?code={codigo-rastreio}\n')
 
 @app.route('/', methods=['GET'])
 def query_bot():
