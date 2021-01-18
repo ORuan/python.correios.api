@@ -12,6 +12,10 @@ import sys
 import chromedriver_autoinstaller
 from selenium import webdriver
 import pdb
+
+GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
+CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
+
 # OA016913717BR
 #user_agent = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.101 Safari/537.36'}
 
@@ -30,6 +34,7 @@ class SearchCorreios():
         options.add_argument("--test-type")
         options.add_argument('--disable-dev-shm-usage')
         options.add_argument('--no-sandbox')
+        options.binary_location = GOOGLE_CHROME_PATH
 
         return webdriver.Chrome(
             chrome_options=options,

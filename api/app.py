@@ -3,10 +3,7 @@ import flask, os, json
 from flask import request, jsonify
 from controller import SearchCorreios
 
-
-
 app = flask.Flask(__name__)
-app.debug = True
 print('')
 print('[*] É provavel que um diretório driver seja criado, não se precoupes')
 print('[*] Para usar a API digite no browser')
@@ -18,5 +15,4 @@ def query_bot():
     search = SearchCorreios(code)
     response = search.selenium_get_code()
     return response
-
 app.run()
