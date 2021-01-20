@@ -13,12 +13,11 @@ import chromedriver_autoinstaller
 from selenium import webdriver
 import pdb
 
-GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
-CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
+#GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
+#CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
 
 # OA016913717BR
 #user_agent = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.101 Safari/537.36'}
-
 
 class SearchCorreios():
     def __init__(self, code):
@@ -28,22 +27,20 @@ class SearchCorreios():
         # Check if the current version of chromedriver exists
         path_install = chromedriver_autoinstaller.install()
         options = webdriver.ChromeOptions()
-        #options.add_argument('--headless')
+        options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
         options.add_argument('--disable-gpu')
         options.add_argument('--ignore-certificate-errors')
         options.add_argument("--test-type")
         options.add_argument('--disable-dev-shm-usage')
-        options.add_argument('--no-sandbox')
-        options.binary_location = GOOGLE_CHROME_PATH
-
         return webdriver.Chrome(
             chrome_options=options,
-            executable_path=path_install
+            executable_path=os.environ.get("CHROMEDRIVER_PATH")
         )
 
     def selenium_get_code(self):
         driver = self.config()
-
         try:
             driver.get(
                 url='https://www2.correios.com.br/sistemas/rastreamento/default.cfm')
@@ -73,4 +70,5 @@ class SearchCorreios():
                 return __json;
             }; return get_content()
         """)
+        driver.close()
         return content
