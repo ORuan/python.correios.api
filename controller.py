@@ -1,17 +1,7 @@
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
 from selenium.webdriver import Chrome
-import requests
-import io
-import pdb
-import pdb
-import time
 import os
 import json
-import sys
-import chromedriver_autoinstaller
 from selenium import webdriver
-import pdb
 
 #GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
 #CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
@@ -25,7 +15,6 @@ class SearchCorreios():
 
     def config(self):
         # Check if the current version of chromedriver exists
-        path_install = chromedriver_autoinstaller.install()
         options = webdriver.ChromeOptions()
         options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
         options.add_argument('--headless')
